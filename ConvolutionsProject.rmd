@@ -1,0 +1,306 @@
+---
+title: "Adam Fire Convolutions Project"
+output: html_notebook
+---
+
+
+
+```{r}
+library(phaseR)
+library(ggplot2)
+```
+# Part 0
+```{r}
+y1 <- c(.0854,.1425,0.1779,0.1927,0.1921, 0.1801, 0.1604, 0.1361, 0.1100,0.0840, 0.0597, 0.0381,0.0198,0.0050,-0.0062,-0.0141,-0.0191,-0.0217,-0.0223,-0.0214,-0.0195,-0.0169,-0.0139,-0.0109,-0.0080,-0.0054,-0.0031,-0.0012,0.0002,0.0013,0.0020, 0.0024,0.0026, 0.0025,0.0023, 0.0021,0.0017,0.0014,0.0010,0.0007)
+
+y2 <- c(0.6065, 0.3679, 0.2231,0.1353,0.0821,0.0498,0.0302,0.0183,0.0111,0.0067,0.0041,0.0025,0.0015,0.0009,0.0006,0.0003,0.0002,0.0001,0.0001,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
+
+y3 <- c(0.0042,0.0136,0.0243,0.0336,0.0398,0.0424,0.0417,0.0384,0.0337,0.0283,0.0231,0.0186,0.0149,0.0123,0.0105,0.0094,0.0088,0.0084,0.0081,0.0078,0.0074,0.0070,0.0064,0.0058,0.0052,0.0046,0.0041,0.0036,0.0032,0.0028,0.0025,0.0023,0.0021,0.0019,0.0018,0.0016,0.0015,0.0013,0.0012,0.0011)
+
+y4 <- c(0.0905,0.1637,0.2222,0.2681,0.3033,0.3293,0.3476,0.3595,0.3659,0.3679,0.3662,0.3614,0.3543,0.3452,0.3347,0.3230,0.3106,0.2975,0.2842,0.2707,0.2572,0.2438,0.2306,0.2177,0.2052,0.1931,0.1814,0.1703,0.1596,0.1494,0.1396,0.1304,0.1217,0.1135,0.1057,0.0984,0.0915,0.0850,0.0789,0.0733)
+```
+
+```{r}
+x = seq(.1,4,.1)
+#impulse response
+plot(x,y1)
+plot(x,y2)
+plot(x,y3)
+plot(x,y4)
+```
+If I had to guess, I would say that y2 corresponds to equation 1 because it is the most simple, y4 corresponds to equation 2, and since y1 and y3 have similar behaviors, they would both correspond to equation 3.
+
+# Part 1 
+$$ f(t) = \cos(4t)$$
+
+```{r}
+x = seq(.1,4,.1)
+ft <- cos(4*x)
+
+conv = convolve(y1,ft)*.01
+#impulse response
+plot(x,y1)
+#forcing function
+curve(cos(4*x), xlim = c(0,2*pi))
+#solution curve
+ggplot(data.frame(x=seq(0,32*pi,length.out = length(conv)), conv=conv))+geom_line(aes(x, conv))+xlim(c(0, 100))
+```
+
+```{r}
+x = seq(.1,4,.1)
+
+conv = convolve(y2,ft)*.01
+#impulse response
+plot(x,y2)
+#forcing function
+curve(cos(4*x), xlim = c(0,2*pi))
+#solution curve
+ggplot(data.frame(x=seq(0,32*pi,length.out = length(conv)), conv=conv))+geom_line(aes(x, conv))+xlim(c(0, 100))
+```
+```{r}
+x = seq(.1,4,.1)
+
+conv = convolve(y3,ft)*.01
+#impulse response
+plot(x,y3)
+#forcing function
+curve(cos(4*x), xlim = c(0,2*pi))
+#solution curve
+ggplot(data.frame(x=seq(0,32*pi,length.out = length(conv)), conv=conv))+geom_line(aes(x, conv))+xlim(c(0, 100))
+```
+
+```{r}
+x = seq(.1,4,.1)
+
+conv = convolve(y4,ft)*.01
+#impulse response
+plot(x,y4)
+#forcing function
+curve(cos(4*x), xlim = c(0,2*pi))
+#solution curve
+ggplot(data.frame(x=seq(0,32*pi,length.out = length(conv)), conv=conv))+geom_line(aes(x, conv))+xlim(c(0, 100))
+```
+
+
+
+
+
+```{r}
+
+
+```
+
+
+
+# Part 2 
+$$ g(t) = 3u_1(t) + u_2(t) - 4u_3(t)$$
+```{r}
+step = function(x, a){
+  ifelse(x >= a, 1, 0)
+}
+```
+
+```{r}
+x = seq(.1,4,.1)
+gt <- 3*step(x,1)+step(x,2)-4*step(x,3)
+
+conv = convolve(y1,gt)*.01
+#impulse response
+plot(x,y1)
+#forcing function
+curve(3*step(x,1)+step(x,2)-4*step(x,3), xlim = c(0,2*pi))
+#solution curve
+ggplot(data.frame(x=seq(0,32*pi,length.out = length(conv)), conv=conv))+geom_line(aes(x, conv))+xlim(c(0, 100))
+```
+
+```{r}
+x = seq(.1,4,.1)
+gt <- 3*step(x,1)+step(x,2)-4*step(x,3)
+
+conv = convolve(y2,gt)*.01
+#impulse response
+plot(x,y2)
+#forcing function
+curve(3*step(x,1)+step(x,2)-4*step(x,3), xlim = c(0,2*pi))
+#solution curve
+ggplot(data.frame(x=seq(0,32*pi,length.out = length(conv)), conv=conv))+geom_line(aes(x, conv))+xlim(c(0, 100))
+```
+```{r}
+x = seq(.1,4,.1)
+gt <- 3*step(x,1)+step(x,2)-4*step(x,3)
+
+conv = convolve(y3,gt)*.01
+#impulse response
+plot(x,y3)
+#forcing function
+curve(3*step(x,1)+step(x,2)-4*step(x,3), xlim = c(0,2*pi))
+#solution curve
+ggplot(data.frame(x=seq(0,32*pi,length.out = length(conv)), conv=conv))+geom_line(aes(x, conv))+xlim(c(0, 100))
+```
+
+```{r}
+x = seq(.1,4,.1)
+gt <- 3*step(x,1)+step(x,2)-4*step(x,3)
+
+conv = convolve(y4,gt)*.01
+#impulse response
+plot(x,y4)
+#forcing function
+curve(3*step(x,1)+step(x,2)-4*step(x,3), xlim = c(0,2*pi))
+#solution curve
+ggplot(data.frame(x=seq(0,32*pi,length.out = length(conv)), conv=conv))+geom_line(aes(x, conv))+xlim(c(0, 100))
+```
+
+# Part 3
+$$ h(t) = e^{-t}$$
+
+
+```{r}
+x = seq(.1,4,.1)
+ht <- exp(-x)
+
+conv = convolve(y1,ht)*.01
+#impulse response
+plot(x,y1)
+#forcing function
+curve(exp(-x), xlim = c(0,2*pi))
+#solution curve
+ggplot(data.frame(x=seq(0,32*pi,length.out = length(conv)), conv=conv))+geom_line(aes(x, conv))+xlim(c(0, 100))
+```
+
+```{r}
+x = seq(.1,4,.1)
+ht <- exp(-x)
+
+conv = convolve(y2,ht)*.01
+#impulse response
+plot(x,y2)
+#forcing function
+curve(exp(-x), xlim = c(0,2*pi))
+#solution curve
+ggplot(data.frame(x=seq(0,32*pi,length.out = length(conv)), conv=conv))+geom_line(aes(x, conv))+xlim(c(0, 100))
+```
+
+```{r}
+x = seq(.1,4,.1)
+ht <- exp(-x)
+
+conv = convolve(y3,ht)*.01
+#impulse response
+plot(x,y3)
+#forcing function
+curve(exp(-x), xlim = c(0,2*pi))
+#solution curve
+ggplot(data.frame(x=seq(0,32*pi,length.out = length(conv)), conv=conv))+geom_line(aes(x, conv))+xlim(c(0, 100))
+```
+
+```{r}
+x = seq(.1,4,.1)
+ht <- exp(-x)
+
+conv = convolve(y4,ht)*.01
+#impulse response
+plot(x,y4)
+#forcing function
+curve(exp(-x), xlim = c(0,2*pi))
+#solution curve
+ggplot(data.frame(x=seq(0,32*pi,length.out = length(conv)), conv=conv))+geom_line(aes(x, conv))+xlim(c(0, 100))
+```
+
+# Part 4 and 5
+
+$$y''+qy= \delta_0(t)$$
+$$L^{-1}[\frac{1}{s^2+q}]=\frac{1}{\sqrt{q}}\sin(\sqrt{q}t)$$
+$$y''+py'+qy= \delta_0$$
+$$L[\frac{1}{s^2+ps+q}]=\frac{1}{\sqrt{q-\frac{p^2}{4}}}e^{\frac{p}{2}t}\sin(\sqrt{q-\frac{p^2}{4}}t)$$
+$$y'''+ry''+py'+qy= \delta_0$$
+$$L[\frac{1}{s^3+rs^2+ps+q}]=?$$
+
+# Differential Equation Degree 1:
+
+```{r}
+#1
+q<-5
+yt<-(1/(sqrt(q)))*sin(sqrt(q)*x)
+conv = convolve(yt,rev(cos(4*x)),type = "o")
+conv2 = convolve(y4,ft)*.01
+ggplot(data.frame(x=seq(0,32*pi,length.out = length(conv)), conv=conv))+geom_line(aes(x, conv))+xlim(c(0, 100))
+ggplot(data.frame(x=seq(0,32*pi,length.out = length(conv2)), conv=conv2),add=TRUE)+geom_line(aes(x, conv2))+xlim(c(0, 100))
+
+#2
+conv = convolve(yt,rev(3*step(x,1)+step(x,2)-4*step(x,3)),type = "o")
+conv2 = convolve(y4,gt)*.01
+ggplot(data.frame(x=seq(0,32*pi,length.out = length(conv)), conv=conv))+geom_line(aes(x, conv))+xlim(c(0, 100))
+ggplot(data.frame(x=seq(0,32*pi,length.out = length(conv2)), conv=conv2),add=TRUE)+geom_line(aes(x, conv2))+xlim(c(0, 100))
+
+#3
+conv = convolve(yt,rev(exp(-x)),type = "o")
+conv2 = convolve(y4,ht)*.01
+ggplot(data.frame(x=seq(0,32*pi,length.out = length(conv)), conv=conv))+geom_line(aes(x, conv))+xlim(c(0, 100))
+ggplot(data.frame(x=seq(0,32*pi,length.out = length(conv2)), conv=conv2),add=TRUE)+geom_line(aes(x, conv2))+xlim(c(0, 100))
+
+```
+I have reason to believe that DE 1 actually matches up with y4. My goal was to guess and check parameters until the graph roughly matched up with the previous graph of the respective forcing function (the y4 graph also looks the most like a sine graph, like the inverse laplace of the DE).
+
+# Differential Equation Degree 2:
+```{r}
+#1
+q<-1
+p<-.4
+g<-sqrt(q-((p^2)/4))
+yt<-(1/(g))*exp((p*x)/2)*sin(g*x)
+conv = convolve(yt,rev(cos(4*x)),type = "o")
+conv2 = convolve(y1,ft)*.01
+ggplot(data.frame(x=seq(0,32*pi,length.out = length(conv)), conv=conv))+geom_line(aes(x, conv))+xlim(c(0, 100))
+ggplot(data.frame(x=seq(0,32*pi,length.out = length(conv2)), conv=conv2),add=TRUE)+geom_line(aes(x, conv2))+xlim(c(0, 100))
+
+#2
+conv = convolve(yt,rev(3*step(x,1)+step(x,2)-4*step(x,3)),type = "o")
+conv2 = convolve(y1,gt)*.01
+ggplot(data.frame(x=seq(0,32*pi,length.out = length(conv)), conv=conv))+geom_line(aes(x, conv))+xlim(c(0, 100))
+ggplot(data.frame(x=seq(0,32*pi,length.out = length(conv2)), conv=conv2),add=TRUE)+geom_line(aes(x, conv2))+xlim(c(0, 100))
+
+#3
+conv = convolve(yt,rev(exp(-x)),type = "o")
+conv2 = convolve(y1,ht)*.01
+ggplot(data.frame(x=seq(0,32*pi,length.out = length(conv)), conv=conv))+geom_line(aes(x, conv))+xlim(c(0, 100))
+ggplot(data.frame(x=seq(0,32*pi,length.out = length(conv2)), conv=conv2),add=TRUE)+geom_line(aes(x, conv2))+xlim(c(0, 100))
+```
+I think that I was wrong again; y1 and y3 seem to represent the second DE. Estimating this one was more difficult since there are two parameters now. The y1 and y3 graphs look similar to a graph in the form $y=e^x\sin{x}$, like the inverse laplace that I got. I will now try y3:
+
+```{r}
+#1
+q<-7
+p<-2.6
+g<-sqrt(q-((p^2)/4))
+yt<-(1/(g))*exp((p*x)/2)*sin(g*x)
+conv = convolve(yt,rev(cos(4*x)),type = "o")
+conv2 = convolve(y3,ft)*.01
+ggplot(data.frame(x=seq(0,32*pi,length.out = length(conv)), conv=conv))+geom_line(aes(x, conv))+xlim(c(0, 100))
+ggplot(data.frame(x=seq(0,32*pi,length.out = length(conv2)), conv=conv2),add=TRUE)+geom_line(aes(x, conv2))+xlim(c(0, 100))
+
+#2
+conv = convolve(yt,rev(3*step(x,1)+step(x,2)-4*step(x,3)),type = "o")
+conv2 = convolve(y3,gt)*.01
+ggplot(data.frame(x=seq(0,32*pi,length.out = length(conv)), conv=conv))+geom_line(aes(x, conv))+xlim(c(0, 100))
+ggplot(data.frame(x=seq(0,32*pi,length.out = length(conv2)), conv=conv2),add=TRUE)+geom_line(aes(x, conv2))+xlim(c(0, 100))
+
+#3
+conv = convolve(yt,rev(exp(-x)),type = "o")
+conv2 = convolve(y3,ht)*.01
+ggplot(data.frame(x=seq(0,32*pi,length.out = length(conv)), conv=conv))+geom_line(aes(x, conv))+xlim(c(0, 100))
+ggplot(data.frame(x=seq(0,32*pi,length.out = length(conv2)), conv=conv2),add=TRUE)+geom_line(aes(x, conv2))+xlim(c(0, 100))
+```
+
+It seems like I got a more accurate estimate for this one.
+
+# Differential Equation Degree 3:
+
+Unfortunately, I was unable to find the Impulse function for this one (I tried finding the inverse laplace with Wolfram and that even didn't work). So I'm left to assume by default that y4 describes it. If I had more time, I would probably be able to figure it out.
+
+To sum up these final findings:
+
+$$y_4(t)=\frac{1}{\sqrt{5}}\sin(\sqrt{5}t)*f(t)$$
+
+$$y_1(t)=\frac{1}{\sqrt{1-\frac{.4^2}{4}}}e^{\frac{.4}{2}t}\sin(\sqrt{1-\frac{.4^2}{4}}t)*f(t)$$
+$$y_3(t)=\frac{1}{\sqrt{7-\frac{2.6^2}{4}}}e^{\frac{2.6}{2}t}\sin(\sqrt{7-\frac{2.6^2}{4}}t)*f(t)$$
